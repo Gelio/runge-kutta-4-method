@@ -1,0 +1,224 @@
+\documentclass[12pt]{article}
+\usepackage{polski}
+\usepackage[utf8]{inputenc}
+\usepackage{amsfonts}
+\usepackage{amsmath}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{centernot}
+\setlength{\parskip}{1em}
+
+
+\begin{document}
+	\title{Sprawozdanie\\Metody Numeryczne 2, laboratorium 5}
+	\author{Grzegorz Rozdzialik (D4, grupa lab. 2)}
+	\maketitle	
+	
+	\section{Zadanie}
+	{\Large Temat \textbf{5}, zadanie \textbf{22}:}\\
+	Stosując metodę potęgową (z normowaniem) oraz deflację $A_1 = A - \lambda x x^*$ oblicz wszystkie wartości własne macierzy trójdiagonalnej $A$, gdzie $a_{k,k} = 5, a_{k, k - 1} = 2+i, a_{k, k+1} = 2-i$.
+	
+	Niech $n \in \mathbb{N}$. Macierz $A \in \mathbb{C}^{n \times n}$ ma postać:
+	\begin{equation*}
+		A =
+		\begin{bmatrix}
+			5      & 2 - i  & 0      & 0      & \dots  & 0      & 0      & 0      \\
+			2+i    & 5      & 2-i    & 0      & \dots  & 0      & 0      & 0      \\
+			0      & 2+i    & 5      & 2-i    & \dots  & 0      & 0      & 0      \\
+			0      & 0      & 2+i    & 5      & \dots  & 0      & 0      & 0      \\
+			\vdots & \vdots & \vdots & \vdots & \ddots & \vdots & \vdots & \vdots \\
+			0      & 0      & 0      & 0      & \dots  & 5      & 2-i    & 0      \\
+			0      & 0      & 0      & 0      & \dots  & 2+i    & 5      & 2-i    \\
+			0      & 0      & 0      & 0      & \dots  & 0      & 2+i    & 5
+		\end{bmatrix}
+	\end{equation*}
+	Łatwo zauważyć, że macierz $A$ jest diagonalnie silnie dominująca kolumnowo i wierszowo.
+	
+	Należy znaleźć wszystkie własności własne $\lambda$ macierzy $A$, czyli takie, że:
+	$$\exists x \in (\mathbb{C} \setminus 0) \hspace{10px}  Ax = \lambda x$$
+	
+	Wartości własne $\lambda$ są pierwiastkami wielomianu charakterystycznego macierzy A:
+	$$X(\lambda) = \det (A - \lambda I)$$
+	
+	Z podstawowego twierdzenia algebry wiemy, że pierwiastków wielomianu $X(\lambda)$ jest $n$, co do krotności.
+	
+	
+	\section{Opis metody}
+	Niech $A_0 = A$.
+	
+	Ponieważ metoda potęgowa znajduje dominującą wartość własną macierzy $A_i$ ($i = 0, \dots, n-1$), należy zastosować deflację. Po znalezieniu dominującej wartości własnej $\lambda_i$ macierzy $A_i$ oraz wektora własnego $x_i \in \mathbb{C}^n$ związanego z wartością własną $\lambda_i$ macierz $A_{i+1}$ otrzymujemy w następujący sposób:
+	$$ A_{i+1} = A_i - \lambda_i x_i x_i^* $$
+	
+	Wartość własna $\lambda_{i+1}$ macierzy $A_{i+1}$ jest mniejsza co do modułu od wartości własnej $\lambda_i$ ($|\lambda_{i+1}| < |\lambda_i|$), więc metoda potęgowa zastosowana na macierzy $A_{i+1}$ znajdzie wartość własną $\lambda_{i+1}$.
+	
+	Niech $\delta \in \mathbb{R}$ będzie zadaną dokładnością przybliżenia wartości własnej $\lambda_i$. Mając przybliżenie początkowej $x_i^{(0)} \in \mathbb{C}^n$ wektora własnego odpowiadającego wartości własnej $\lambda_i$ mamy:
+	\begin{align}
+		\begin{split}
+			\label{przyblizenie-wektora}
+			y_i^{(k)}       & = A_i x_i^{(k-1)} \\
+			x_i^{(k)}       & = \frac{y_i^{(k)}}{|| y_i^{(k)} ||_2}
+		\end{split}
+	\end{align}
+
+	\begin{align}
+		\label{przyblizenie-wartosci}
+		\lambda_i^{(k)} = \langle y_i^{(k)}, x_i^{(k-1)} \rangle
+	\end{align}
+	gdzie równania \eqref{przyblizenie-wektora} przybliżają wektor początkowy związany z dominującą wartością własną macierzy $A_i$, a równanie \eqref{przyblizenie-wartosci} przybliża tą dominującą wartość własną.
+	
+	Przybliżanie kontynuujemy, aż zostanie spełniony warunek stopu:
+	$$ | \lambda_i^{(k)} - \lambda_i^{(k-1)} | < \delta $$
+	
+	Obliczenia powtarzamy dla $i = 0, \dots, n-1$.
+	
+	Po znalezieniu wszystkich wartości i wektorów własnych można sprawdzić jak dokładne obliczone przybliżenia. W tym celu zdefiniujmy:
+	$$e_i = A x_i - \lambda_i x_i \hspace{30px} i = 0, 1, \dots, n-1$$
+	\begin{equation*}
+		E = 
+		\begin{bmatrix}
+			e_0 & e_1 & e_2 & \dots & e_{n-1}
+		\end{bmatrix}
+	\end{equation*}
+	
+	Licząc normę z macierzy $E$ otrzymujemy konkretną wartość oznaczającą dokładność znalezionych wartości i wektorów własnych.
+	
+	\section{Implementacja metody}
+	Implementacja metody podzielona jest na następujące kroki:
+	\begin{enumerate}
+		\item Konstruowanie macierzy $A$ rozmiaru $n \times n$ (funkcja \texttt{constructMatrix})
+		\item Wykonanie metody potęgowej z normowaniem w celu znalezienia dominującej wartości własnej $\lambda_i$ macierzy $A_i$ (funkcja \texttt{powerIteration})
+		\item Powtarzanie kroku związanego z metodą potęgową oraz deflacja po znalezieniu $\lambda_i$ w celu znalezienia wszystkich wartości własnych macierzy $A$ (funkcja \texttt{findEigenvaluesAndVectors})
+		\item Obliczenie macierzy błędu $E$ (funkcja \texttt{calculateErrorMatrix})
+	\end{enumerate}
+
+	
+	
+	\section{Poprawność metody}
+	Biorąc wektor $x_i^{(0)} = [1 1 1 \dots 1]^T$ za przybliżenie początkowe metoda jest poprawna, ponieważ wektor ten ma każdą niezerową składową, zatem daje się przybliżyć do dowolnego wektora w przestrzeni wektorów własnych.
+	
+	Po wykonaniu testów stwierdzam, że metoda jest poprawna, znajduje wszystkie wartości własne macierzy $A$ oraz odpowiadające im wektory własne, a jej wyniki są zbliżone do tych z funkcji \texttt{eig} realizującej to samo zadanie, dostępnej w Matlabie.
+	
+	
+	
+	\section{Przykłady}
+	Z powodu niewielkiej liczby parametrów w zadaniu przykłady pokazują porównanie metody potęgowej z normowaniem oraz metody \texttt{eig} dostępnej w Matlabie.
+	
+	W każdym przykładzie przyjęty jest limit iteracji równy $100$, ale w większości przypadków nie został on osiągnięty.
+	
+	\begin{enumerate}[label=\textbf{Przykład \arabic*}]
+		\item
+		$n = 5, \delta = 0.1$
+		\begin{align*}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			                                        & metoda potęgowa & funkcja \texttt{eig} \\ \hline
+			maksymalny błąd $A x_i - \lambda_i x_i$ &      16.0       &         14.7         \\ \hline
+			       norma macierzy błędu $E$         &      22.2       &         22.5         \\ \hline
+			           czas przybliżania            &    0.4330 ms    &      0.0912 ms       \\ \hline
+		\end{tabular}
+		\end{align*}
+	
+		Pod względem dokładności obie metody są podobne, jednak funkcja \texttt{eig} dominuje pod względem szybkości - jest ponad czterokrotnie szybsza.
+		
+		\item
+		$n = 5, \delta = 10^{-5}$
+		
+		Zwiększenie dokładności spowodowało zmniejszenie maksymalnego błędu $A x_i - \lambda_i x_i$ metody potęgowej do 14.7 (wynik podobny do funkcji \texttt{eig}) przy jednoczesnym wydłużeniu czasu przybliżania do $2.61$ ms (ponad sześciokrotny wzrost).
+		
+		
+		\item
+		$n = 20, \delta = 0.1$
+		\begin{align*}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			                                        & metoda potęgowa & funkcja \texttt{eig} \\ \hline
+			maksymalny błąd $A x_i - \lambda_i x_i$ &      39.0       &         29.6         \\ \hline
+			       norma macierzy błędu $E$         &      108.7      &        110.2         \\ \hline
+			           czas przybliżania            &    6.7451 ms    &      0.9639 ms       \\ \hline
+		\end{tabular}
+		\end{align*}
+		
+		Zwiększenie rozmiaru macierzy zmniejszyło dokładność obu metod oraz wydłużyło ich czas działania.
+		
+		
+		\item
+		$n = 20, \delta = 10^{-5}$
+		\begin{align*}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			                                        & metoda potęgowa & funkcja \texttt{eig} \\ \hline
+			maksymalny błąd $A x_i - \lambda_i x_i$ &      26.3       &         29.6         \\ \hline
+			       norma macierzy błędu $E$         &      110.0      &        110.2         \\ \hline
+			           czas przybliżania            &   14.4620 ms    &      0.4081 ms       \\ \hline
+		\end{tabular}
+		\end{align*}
+		
+		Zmniejszenie parametru $\delta$ spowodowało zredukowanie maksymalnego błędu $A x_i - \lambda_i x_i$ o około $30\%$, jednak norma macierzy błędu nie odniosła podobnych zmian. Ogólnie dokładność jest porównywalna z tą funkcji \texttt{eig}, podczas gdy czas działania został znacznie zwiększony.
+		
+		
+		\item
+		$n = 100, \delta = 0.1$
+		\begin{align*}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			                                        & metoda potęgowa & funkcja \texttt{eig} \\ \hline
+			maksymalny błąd $A x_i - \lambda_i x_i$ &      89.2       &         66.9         \\ \hline
+			       norma macierzy błędu $E$         &      577.2      &        583.2         \\ \hline
+			           czas przybliżania            &   48.9731 ms    &      1.8216 ms       \\ \hline
+		\end{tabular}
+		\end{align*}
+		
+		Przy dużych macierzach ($n = 100$) i $\delta = 0.1$ zastosowanie metody potęgowej skutkuje uzyskaniem podobnej dokładności co po zastosowaniu funkcji \texttt{eig}, jednakże czas działania znowu jest krótszy w przypadku funkcji z Matlaba.
+		
+		
+		\item
+		$n = 1000, \delta = 0.1$
+		\begin{align*}
+		\begin{tabular}{|c|c|c|}
+			\hline
+			                                        & metoda potęgowa & funkcja \texttt{eig} \\ \hline
+			maksymalny błąd $A x_i - \lambda_i x_i$ &      284.3      &        205.8         \\ \hline
+			       norma macierzy błędu $E$         &     5850.4      &        5907.6        \\ \hline
+			           czas przybliżania            &   33457.7 ms    &       424.8 ms       \\ \hline
+		\end{tabular}
+		\end{align*}
+		
+		Dla bardzo dużej macierzy ($n = 1000$) występuje odczuwalna różnica, pomiędzy czasem działania obu funkcji. Metoda potęgowa w tej sytuacji działała ponad pół minuty, podczas gdy funkcja \texttt{eig} poradziła sobie z zadaniem w poniżej pół sekundy, dając podobne (o ile nawet nie dokładniejsze) wyniki.
+	\end{enumerate}
+	
+	
+	
+	
+	\section{Wnioski}
+	\begin{enumerate}
+		\item Dla małych macierzy ($n < 20$) i parametru $\delta$ rzędu $0.1$ obie funkcje dają podobne wyniki, a różnica w działaniu jest mało znacząca, dla pojedynczej operacji, jednakże mimo wszystko na korzyść funkcji \texttt{eig}.
+		
+		\item Obie metody dają w miarę poprawne, jednakże nie do końca dokładne wyniki, co można zaobserwować analizując normę macierzy błędu $E$. Minimum dla tego parametru osiągała często metoda potęgowa.
+		
+		\item Dla bardzo dużych macierzy ($n$ rzędu $1000$) czas działania metody potęgowej jest długi (ponad pół minuty, przykład 6.).
+		
+		\item Faworytem w kwestii czasu działania podczas testów okazywała się funkcja \texttt{eig}.
+		
+		\item Metoda potęgowa poprawnie obliczała wszystkie wartości własne i wektory własne zadanej macierzy, więc realizowała dobrze swoje zadanie.
+	\end{enumerate}
+	
+	
+	
+	\section{Funkcja do testowania metody}
+	Dla wygodnego testowania metody potęgowej, która jest tematem zadania, został przygotowany skrypt testowy \texttt{textMethod}. Pozwala on na ustawienie parametru $\delta$, rozmiaru macierzy $A$ (parametr $n$), oraz maksymalnej liczby iteracji.
+	
+	Skrypt najpierw konstruuje zadaną macierz $A$, następnie stosuje metodę potęgową z normowaniem i deflacją do przybliżenia wartości własnych i wektorów własnych tej macierzy, a następnie oblicza macierz błędu $E$ i jej normę. Takie same operacje zostają wykonane z wynikami otrzymanymi z funkcji \texttt{eig}.
+	
+	Następnie w konsoli zostaje wypisane porównanie obu metod, wraz z normami macierzy $E$ oraz czasem działania.
+	
+	Obliczone wartości własne dostępne są w zmiennej \texttt{eigenvalues}, a wektory własne w macierzy \texttt{eigenvectors} (ustawione kolumnowo).
+	
+	
+	
+	\section{Bibliografia}
+	\begin{enumerate}
+		\item Informacje z wykładu \textit{Metod numerycznych 2} (wydział MiNI PW, dr Iwona Wróbel), w szczególności temat dotyczący \textit{metody potęgowej z normowaniem}, wraz z algorytmem.
+	\end{enumerate}
+	
+\end{document}
