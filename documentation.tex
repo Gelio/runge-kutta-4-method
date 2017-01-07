@@ -110,8 +110,7 @@
 	
 	odpowiada następująca konfiguracja:
 	\\
-	\texttt{
-		f1 = @(x, y1, y2)(y2); \\
+	\texttt{f1 = @(x, y1, y2)(y2); \\
 		f2 = @(x, y1, y2)(3 * exp(x / 2) - y2); \\
 		a = 0; \\
 		b = 10; \\
@@ -124,8 +123,29 @@
 		\label{example-changingN-1}
 		Zagadnienie początkowe utworzone z przekształcenia równania różniczkowego 2-go rzędu na układ równań różniczkowych 1-go rzędu.
 		
-		\texttt{
-		f1 = @(x, y1, y2)(y2);	\\
+		\begin{align*}
+			y'' + y' = 3e^{\frac{t}{2}}
+		\end{align*}
+		
+		\begin{align*}
+		\begin{cases}
+			y_1' &= y_2 \\
+			y_2' &= 3e^{\frac{t}{2}} - y_2 \\
+			y_1(0) = 4 \\
+			y_2(0) = 3
+		\end{cases}
+		\end{align*}
+		
+		Znane rozwiązanie:
+		\begin{align*}
+		\begin{cases}
+			y_1(x) &= -e^{-x} + 4e^{\frac{x}{2}} + 1 \\
+			y_2(x) &= e^{-x} + 2e^{\frac{x}{2}}
+		\end{cases}
+		\end{align*}
+		
+		Konfiguracja skryptu: \\
+		\texttt{f1 = @(x, y1, y2)(y2);	\\
 		f2 = @(x, y1, y2)(3 * exp(x / 2) - y2);\\
 		a = 0;\\
 		b = 10;\\
@@ -154,20 +174,7 @@
 		
 		\item 
 		\label{example-changingN-2}
-		To samo zagadnienie początkowe co w poprzednim przykładzie.
-		
-		\texttt{
-			f1 = @(x, y1, y2)(y2);	\\
-			f2 = @(x, y1, y2)(3 * exp(x / 2) - y2);\\
-			a = 0;\\
-			b = 10;\\
-			y1a = 4;\\
-			y2a = 3;\\	
-			y1Solution = @(x)(-exp(-x) + 4 * exp(x / 2) + 1); \\
-			y2Solution = @(x)(exp(-x) + 2 * exp(x / 2));
-		}
-		
-		10-krotnie zwiększona liczba przedziałów: $n = 100$
+		To samo zagadnienie początkowe i konfiguracja co w poprzednim przykładzie, jednakże	10-krotnie zwiększona liczba przedziałów: $n = 100$
 		
 		\begin{figure}[H]
 			\centering
@@ -201,6 +208,55 @@
 		\end{itemize}
 		
 		Znowu błąd zmalał 10000-krotnie. Czas obliczeń tym razem wzrósł około 7 razy.
+		
+		\item
+		Inny układ równań różniczkowych.
+		
+		\begin{align*}
+		\begin{dcases}
+			y_1' &= y_1 + y_2 + x \\
+			y_2' &= 3y_1 - y_2 + 2x \\
+			y_1(0) &= 5 \\
+			y_2(0) &= 4
+		\end{dcases}
+		\end{align*}
+		
+		Znane rozwiązanie:
+		\begin{align*}
+		\begin{cases}
+			y_1(x) &= \frac{1}{16} (-12x + 3e^{-2x} + 81e^{2x} - 4) \\
+			y_2(x) &= \frac{1}{16}e^{-2x}(-4e^{2x}(x + 2) + 81e^{4x} - 9)
+		\end{cases}
+		\end{align*}
+		
+		Konfiguracja skryptu: \\
+		\texttt{f1 = @(x, y1, y2)(y1 + y2 + x); \\
+		f2 = @(x, y1, y2)(3 * y1 - y2 + 2 * x); \\
+		a = 0; \\
+		b = 5; \\
+		y1a = 5; \\
+		y2a = 4; \\
+		y1Solution = @(x)((-12 .* x + 3 * exp(-2 .* x) + 81 * exp(2 * x) - 4) / 16); \\ 
+		y2Solution = @(x)((exp(-2 * x) / 16 .* (-4 * exp(2 * x) .* (x + 2) + 81 * exp(4 * x) - 9)));
+		}
+	
+		$n = 100$
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.7]{images/example-3.png}
+		\end{figure}
+		
+		
+		Czas rozwiązywania zagadnienia początkowego: 0.000004 ms\\
+		Maksymalny moduł błędu między rozwiązaniem dokładnym a obliczonym metodą:
+		\begin{itemize}
+			\item dla y1: $0.8550255$
+			\item dla y2: $0.8550255$
+		\end{itemize}
+	
+		Przy krótkim czasie obliczeń udało się osiągnąć dość dobrą dokładność, ponieważ przy rozwiązaniach o wartościach rzędu $10^4$ maksymalny moduł błędu wyniósł mniej niż 1.
+		
 	\end{enumerate}
 	
 	
@@ -216,6 +272,9 @@
 		
 		\item
 		Metoda działa bardzo szybko nawet dla dużych $n$ ($n = 1000$ w przykładzie \ref{example-bigN}).
+		
+		\item
+		Zaletami tej metody są prosta implementacja, szybkość działania oraz dobra dokładność.
 	\end{enumerate}
 	
 	
