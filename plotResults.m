@@ -20,26 +20,34 @@
 function plotResults(x, y1, y2, y1Exact, y2Exact, joinPlots)
 blad1 = abs(y1 - y1Exact);
 blad2 = abs(y2 - y2Exact);
+n = length(x);
+
+% Ustawienie stylu jednego z wykresow (w przypadku duzej liczby przedzialow
+% naniesionych zostaje za duzo informacji)
+firstPlotStyle = '-+';
+if n > 10
+    firstPlotStyle = '-';
+end
 
 figure;
 if joinPlots == 1
     subplot(1, 2, 1);
-    plot(x, y1, '-+', x, y1Exact, x, y2, '-+', x, y2Exact);
+    plot(x, y1, firstPlotStyle, x, y1Exact, x, y2, firstPlotStyle, x, y2Exact);
     title('Rozwiazania uk³adu równañ ró¿niczkowych');
     legend('y1 obliczone RK4', 'y1 dok³adne', 'y2 obliczone RK4', 'y2 dok³adne');
     
     subplot(1, 2, 2);
-    plot(x, blad1, '-+', x, blad2);
+    plot(x, blad1, firstPlotStyle, x, blad2);
     title('Modu³ b³êdów rozwi¹zañ');
     legend('B³¹d dla y1', 'B³¹d dla y2');
 else
     subplot(2, 2, 1);
-    plot(x, y1, '-+', x, y1Exact);
+    plot(x, y1, firstPlotStyle, x, y1Exact);
     title('Rozwi¹zanie y1');
     legend('y1 obliczone RK4', 'y1 dok³adne');
 
     subplot(2, 2, 2);
-    plot(x, y2, '-+', x, y2Exact);
+    plot(x, y2, firstPlotStyle, x, y2Exact);
     title('Rozwi¹zanie y2');
     legend('y2 obliczone RK4', 'y2 dok³adne');
 
