@@ -7,7 +7,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 \usepackage{centernot}
-\usepackage{systeme}
+\usepackage{mathtools}
 \setlength{\parskip}{1em}
 
 
@@ -22,12 +22,12 @@
 	
 	Niech $x \in [a, b] \subset \mathbb{R}$. Dane zagadnienie początkowe do rozwiązania:
 	\begin{equation}
-	\systeme[][:]{
-		y_1' = f_1(x, y_1, y_2) :
-		y_2' = f_2(x, y_1, y_2) :
-		y_1(a) = y_{1, a} :
-		y_2(a) = y_{2, a}
-	}
+	\begin{dcases}
+		y_1' &= f_1(x, y_1, y_2) \\
+		y_2' &= f_2(x, y_1, y_2) \\
+		y_1(a) &= y_{1, a} \\
+		y_2(a) &= y_{2, a}
+	\end{dcases}
 	\end{equation}
 	
 	Niech $n \in N$ będzie liczbą oznaczającą ilość podprzedziałów, na jakie należy podzielić odcinek $[a, b]$ tak, że:
@@ -96,11 +96,111 @@
 	
 	
 	\section{Przykłady}
-	\textbf{TODO}
+	W przykładach znajdują się fragmenty konfiguracji skryptu do testowania metody (opisany w sekcji \ref{sec:testing-script}).
 	
+	Przykładowo, zagadnieniu początkowemu:
+	\begin{align*}
+	\begin{dcases}
+		y_1' &= y_2 \\
+		y_2' &= 3e^\frac{x}{2} - y_2 \\
+		y_1(0) &= 4 \\
+		y_2(0) &= 3
+	\end{dcases}
+	\end{align*}
+	
+	odpowiada następująca konfiguracja:
+	\\
+	\texttt{
+		f1 = @(x, y1, y2)(y2); \\
+		f2 = @(x, y1, y2)(3 * exp(x / 2) - y2); \\
+		a = 0; \\
+		b = 10; \\
+		y1a = 4; \\
+		y2a = 3; \\	
+	}
+
 	\begin{enumerate}[label=\textbf{Przykład \arabic*}]
+		\item 
+		\label{example-changingN-1}
+		Zagadnienie początkowe utworzone z przekształcenia równania różniczkowego 2-go rzędu na układ równań różniczkowych 1-go rzędu.
+		
+		\texttt{
+		f1 = @(x, y1, y2)(y2);	\\
+		f2 = @(x, y1, y2)(3 * exp(x / 2) - y2);\\
+		a = 0;\\
+		b = 10;\\
+		y1a = 4;\\
+		y2a = 3;\\	
+		y1Solution = @(x)(-exp(-x) + 4 * exp(x / 2) + 1); \\
+		y2Solution = @(x)(exp(-x) + 2 * exp(x / 2));
+		}
+	
+		$n = 10$
+	
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.7]{images/example-1.png}
+		\end{figure}
+	
+	
+		Czas rozwiązywania zagadnienia początkowego: 0.000003 ms\\
+		Maksymalny moduł błędu między rozwiązaniem dokładnym a obliczonym metodą:
+		\begin{itemize}
+			\item dla y1: 0.4060596
+			\item dla y2: 0.4145344
+		\end{itemize}
+	
+		Jak widać obliczenia zajmują bardzo mało czasu i są dość dokładne już dla małych wartości $n$.
+		
+		\item 
+		\label{example-changingN-2}
+		To samo zagadnienie początkowe co w poprzednim przykładzie.
+		
+		\texttt{
+			f1 = @(x, y1, y2)(y2);	\\
+			f2 = @(x, y1, y2)(3 * exp(x / 2) - y2);\\
+			a = 0;\\
+			b = 10;\\
+			y1a = 4;\\
+			y2a = 3;\\	
+			y1Solution = @(x)(-exp(-x) + 4 * exp(x / 2) + 1); \\
+			y2Solution = @(x)(exp(-x) + 2 * exp(x / 2));
+		}
+		
+		10-krotnie zwiększona liczba przedziałów: $n = 100$
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.7]{images/example-2.png}
+		\end{figure}
+		
+		
+		Czas rozwiązywania zagadnienia początkowego: 0.000006 ms\\
+		Maksymalny moduł błędu między rozwiązaniem dokładnym a obliczonym metodą:
+		\begin{itemize}
+			\item dla y1: $3.362839 * 10^{-5}$
+			\item dla y2: $3.448142 * 10^{-5}$
+		\end{itemize}
+	
+		Maksymalny błąd zmalał 10000-krotnie, a czas obliczeń wzrósł jedynie 2-krotnie.
+		
 		\item
-		\textbf{TODO}
+		\label{example-bigN}
+		
+		To samo zagadnienie początkowe co w poprzednim przykładzie.
+		
+		10-krotnie zwiększona liczba przedziałów: $n = 1000$
+		
+		Wykresy wyglądają bardzo podobnie, zmienia zmienia się jedynie skala na wykresie błędów, więc nie zostały tu umieszczone, ponieważ nic nie wnoszą do przykładu.
+		
+		Czas rozwiązywania zagadnienia początkowego: 0.000041 ms\\
+		Maksymalny moduł błędu między rozwiązaniem dokładnym a obliczonym metodą:
+		\begin{itemize}
+			\item dla y1: $3.274067 * 10^{-9}$
+			\item dla y2: $3.359560 * 10^{-9}$
+		\end{itemize}
+		
+		Znowu błąd zmalał 10000-krotnie. Czas obliczeń tym razem wzrósł około 7 razy.
 	\end{enumerate}
 	
 	
@@ -108,7 +208,14 @@
 	
 	\section{Wnioski}
 	\begin{enumerate}
-		\item \textbf{TODO}
+		\item
+		Na podstawie porównań maksymalnego modułu błędu można zauważyć, że metoda \eqref{eq:RK4} jest faktycznie rzędu 4, ponieważ przy 10-krotnym zwiększeniu liczby przedziałów błąd zmalał 10000-krotnie (\ref{example-changingN-1} oraz \ref{example-changingN-2}).
+		
+		\item
+		Metoda ma złożoność O(n). Można to zauważyć zwiększając parametr $n$. Ponadto, w metodzie występuje jedynie jedna pętla zależna od ilości podprzedziałów, w której jest stała liczba obliczeń (w każdej iteracji).
+		
+		\item
+		Metoda działa bardzo szybko nawet dla dużych $n$ ($n = 1000$ w przykładzie \ref{example-bigN}).
 	\end{enumerate}
 	
 	

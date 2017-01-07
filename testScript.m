@@ -25,7 +25,7 @@ y2Solution = @(x)(exp(-x) + 2 * exp(x / 2));
 
 % Ilosc podprzedzialow odcinka [a, b] (zazwyczaj im wiecej tym lepsza
 % dokladnosc)
-n = 100;
+n = 1000;
 
 % Rozwiazanie y1 i y2 na jednym wykresie (1 - oba na jednym, 0 - y1 i y2 na
 % oddzielnych wykresach)
