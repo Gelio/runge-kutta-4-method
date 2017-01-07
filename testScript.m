@@ -12,16 +12,17 @@
 
 % *** Konfiguracja ***
 % Zagadnienie poczatkowe
-f1 = @(x, y1, y2)(y1 + y2 + x);
-f2 = @(x, y1, y2)(3 * y1 - y2 + 2 * x);
+f1 = @(x, y1, y2)(y2 + cos(x));
+f2 = @(x, y1, y2)(-y1 + x);
 a = 0;
 b = 5;
-y1a = 5;
-y2a = 4;
+y1a = 1;
+y2a = 2;
+
 
 % Rozwiazanie ukladu rownan rozniczkowych
-y1Solution = @(x)((-12 .* x + 3 * exp(-2 .* x) + 81 * exp(2 * x) - 4) / 16);
-y2Solution = @(x)((exp(-2 * x) / 16 .* (-4 * exp(2 * x) .* (x + 2) + 81 * exp(4 * x) - 9)));
+y1Solution = @(x)(x + 3 * sin(x) / 2 + (x + 2) .* cos(x) / 2);
+y2Solution = @(x)(-1/2 * (x + 2) .* sin(x) + cos(x) + 1);
 
 % Ilosc podprzedzialow odcinka [a, b] (zazwyczaj im wiecej tym lepsza
 % dokladnosc)
@@ -29,7 +30,7 @@ n = 100;
 
 % Rozwiazanie y1 i y2 na jednym wykresie (1 - oba na jednym, 0 - y1 i y2 na
 % oddzielnych wykresach)
-joinPlots = 0;
+joinPlots = 1;
 
 
 % *** Koniec konfiguracji ***

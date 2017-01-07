@@ -210,8 +210,7 @@
 		Znowu błąd zmalał 10000-krotnie. Czas obliczeń tym razem wzrósł około 7 razy.
 		
 		\item
-		Inny układ równań różniczkowych.
-		
+		Zagadnienie początkowe:
 		\begin{align*}
 		\begin{dcases}
 			y_1' &= y_1 + y_2 + x \\
@@ -257,6 +256,54 @@
 	
 		Przy krótkim czasie obliczeń udało się osiągnąć dość dobrą dokładność, ponieważ przy rozwiązaniach o wartościach rzędu $10^4$ maksymalny moduł błędu wyniósł mniej niż 1.
 		
+		\item
+		Zagadnienie początkowe:
+		\begin{align*}
+		\begin{cases}
+			y_1' &= y_2 + \cos x \\
+			y_2' &= -y_1 + x \\
+			y_1(0) &= 1 \\
+			y_2(0) = 2
+		\end{cases}
+		\end{align*}
+		
+		Znane rozwiązanie:
+		\begin{align*}
+		\begin{cases}
+			y_1(x) &= x + \frac{3 \sin x}{2} + \frac{1}{2}(x + 2) \cos x \\
+			y_2(x) &= -\frac{1}{2} (x + 2) \sin x + \cos x + 1
+		\end{cases}
+		\end{align*}
+		
+		Konfiguracja skryptu:
+		\texttt{f1 = @(x, y1, y2)(y2 + cos(x)); \\
+			f2 = @(x, y1, y2)(-y1 + x); \\
+			a = 0; \\
+			b = 5; \\
+			y1a = 1; \\
+			y2a = 2; \\
+			y1Solution = @(x)(x + 3 * sin(x) / 2 + (x + 2) .* cos(x) / 2); \\ 
+			y2Solution = @(x)(-1/2 * (x + 2) .* sin(x) + cos(x) + 1);
+		}
+	
+		$n = 100$
+		
+		\begin{figure}[H]
+			\centering
+			\includegraphics[scale=0.7]{images/example-4.png}
+		\end{figure}
+		Oba rozwiązania zostały naniesione na jednym wykresie, ponieważ ich zbiór wartości jest podobny.
+		
+		
+		Czas rozwiązywania zagadnienia początkowego: 0.000004 ms\\
+		Maksymalny moduł błędu między rozwiązaniem dokładnym a obliczonym metodą:
+		\begin{itemize}
+			\item dla y1: $7.268763 * 10^{-7}$
+			\item dla y2: $6.783909 * 10^{-7}$
+		\end{itemize}
+	
+		Bardzo mała wartość modułu błędu.
+		
 	\end{enumerate}
 	
 	
@@ -275,6 +322,9 @@
 		
 		\item
 		Zaletami tej metody są prosta implementacja, szybkość działania oraz dobra dokładność.
+		
+		\item
+		Oba wykresy (wartości dokładne jak i obliczone metodą) właściwie nachodzą na siebie - nie jest możliwe zobaczenie błędu gołym okiem na załączonych grafikach, co świadczy o bardzo dobrej dokładności metody.
 	\end{enumerate}
 	
 	
