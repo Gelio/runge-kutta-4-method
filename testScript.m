@@ -1,4 +1,6 @@
 % Skrypt testujacy metode Rungego Kutta rzedu 4 ze wzorem "trzech osmych".
+% Wyswietla rozwiazania ukladu dwoch rownan rozniczkowych na wykresie (lub
+% wykresach), tablicujac rowniez blad.
 % Autor: Grzegorz Rozdzialik (D4, gr. lab. 2)
 
 % Uklad dwoch rownan rozniczkowych:
@@ -23,11 +25,14 @@ y2Solution = @(x)(exp(-x) + 2 * exp(x / 2));
 
 % Ilosc podprzedzialow odcinka [a, b] (zazwyczaj im wiecej tym lepsza
 % dokladnosc)
-n = 100;
+n = 10;
+
+% Rozwiazanie y1 i y2 na jednym wykresie (1 - oba na jednym, 0 - y1 i y2 na
+% oddzielnych wykresach)
+joinPlots = 0;
 
 
 % *** Koniec konfiguracji ***
-
 
 
 % Rozwiazanie ukladu rownan rozniczkowych
@@ -38,4 +43,11 @@ y1Exact = y1Solution(x);
 y2Exact = y2Solution(x);
 
 % Naniesienie danych na wykres
-plotResults(x, y1, y2, y1Exact, y2Exact);
+plotResults(x, y1, y2, y1Exact, y2Exact, joinPlots);
+
+% Stablicowanie bledu
+errorY1 = abs(y1 - y1Exact);
+errorY2 = abs(y2 - y2Exact);
+fprintf('Maksymalny modu³ b³êdu miêdzy rozwi¹zaniem dok³adnym a obliczonym metod¹:\n');
+fprintf('* dla y1: %e\n', max(errorY1));
+fprintf('* dla y2: %e\n', max(errorY2));
