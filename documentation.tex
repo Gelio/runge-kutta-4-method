@@ -43,8 +43,8 @@
 	\section{Opis metody}
 	Metoda Rungego-Kutty rzędu 4 dla pojedynczego równania różniczkowego określa się wzorem:
 	\begin{equation}
+		\label{eq:RK4}
 		y_{n+1} = y_n + \sum_{i = 1}^{4} w_i K_i
-		\label{RK4}
 	\end{equation}
 	
 	gdzie:
@@ -81,15 +81,17 @@
 	\begin{enumerate}
 		\item \texttt{[x, y1, y2] = solveDifferentialSystem(f1, f2, a, b, n, y1a, y2a)} - podział odcinka $[a, b]$ na $n$ podprzedziałów, wykorzystanie zagadnienia początkowego do uzupełnienia $y_{1, a}, y_{2, a}$, iteracyjne obliczenie kolejnych rozwiązań funkcją \texttt{calculateSolutionValue}
 		
-		\item \texttt{[y1n, y2n] = calculateSolutionValue(f1, f2, y1, y2, x, n)} - obliczenie rozwiązań $y_{1, n}$ oraz $y_{2, n}$ wykorzystując metodę Rungego Kutty rzędu 4 (wzór \eqref{RK4})
+		\item \texttt{[y1n, y2n] = calculateSolutionValue(f1, f2, y1, y2, x, n)} - obliczenie rozwiązań $y_{1, n}$ oraz $y_{2, n}$ wykorzystując metodę Rungego Kutty rzędu 4 (wzór \eqref{eq:RK4})
 		
-		\item \texttt{plotResults(x, y1, y2, y1Exact, y2Exact, joinPlots)} - naniesienie wartości rozwiązania obliczonych metodą \eqref{RK4} oraz wartości dokładnych na wykres. Dodatkowo utworzenie wykresu z modułem błędów dla obu metod.
+		\item \texttt{plotResults(x, y1, y2, y1Exact, y2Exact, joinPlots)} - naniesienie wartości rozwiązania obliczonych metodą \eqref{eq:RK4} oraz wartości dokładnych na wykres. Dodatkowo utworzenie wykresu z modułem błędów dla obu metod.
 	\end{enumerate}
 
 	
 	
 	\section{Poprawność metody}
-	\textbf{TODO}
+	Z rozdziału dotyczącego \textit{Metod Rungego-Kutty} w książce Z. Fortuna, B. Macukow, J. Wąsowski \textit{Metody numeryczne} wiadomo, że wzór "trzech ósmych" jest absolutnie stabilny dla dostatecznie małych $h$, zatem zwiększając parametr $n$, a co za tym idzie zmniejszając długość każdego z podprzedziałów (czyli zmniejszając $h$) otrzymujemy absolutną stabilność tej metody.
+	
+	Można to łatwo zauważyć zwiększając parametr $n$ w skrypcie testowym (opisanym w sekcji \ref{sec:testing-script}).
 	
 	
 	
@@ -112,6 +114,7 @@
 	
 	
 	\section{Skrypt do testowania metody}
+	\label{sec:testing-script}
 	Do testowania metody został utworzony skrypt znajdujący się w pliku \texttt{textScript.m}.
 	
 	Pozwala on na wpisanie własnego zagadnienia początkowego, rozwiązania tego zagadnienia (w celu obliczenia wartości dokładnych oraz wektora błędów), a także określenie ilości podprzedziałów, na jakie ma zostać podzielony odcinek $[a, b]$ (parametr $n$, zazwyczaj im większy, tym lepsza dokładność i mniejszy błąd rozwiązania).
@@ -122,7 +125,7 @@
 	\section{Bibliografia}
 	\begin{enumerate}
 		\item Informacje z wykładu \textit{Metod numerycznych 2} (wydział MiNI PW, dr Iwona Wróbel), w szczególności temat dotyczący \textit{metody Rungego-Kutty} oraz \textit{rozwiązywania układu równań różniczkowych}.
-		\item Z. Fortuna, B. Macukow, J. Wąsowski "Metody numeryczne" - rozdział 7 \textit{Metody rozwiązywania zagadnień początkowych dla równań różniczkowych zwyczajnych}, podrozdział 7.4 \textit{Metody typu Rungego-Kutty}.
+		\item Z. Fortuna, B. Macukow, J. Wąsowski \textit{Metody numeryczne} - rozdział 7 \textit{Metody rozwiązywania zagadnień początkowych dla równań różniczkowych zwyczajnych}, podrozdział 7.4 \textit{Metody typu Rungego-Kutty}.
 	\end{enumerate}
 	
 \end{document}
