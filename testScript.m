@@ -25,7 +25,7 @@ y2Solution = @(x)(exp(-x) + 2 * exp(x / 2));
 
 % Ilosc podprzedzialow odcinka [a, b] (zazwyczaj im wiecej tym lepsza
 % dokladnosc)
-n = 10;
+n = 100;
 
 % Rozwiazanie y1 i y2 na jednym wykresie (1 - oba na jednym, 0 - y1 i y2 na
 % oddzielnych wykresach)
@@ -44,7 +44,11 @@ if abs(y1Solution(a) - y1a) > delta || abs(y2Solution(a) - y2a) > delta
 end
 
 % Rozwiazanie ukladu rownan rozniczkowych
+tic;
 [x, y1, y2] = solveDifferentialSystem(f1, f2, a, b, n, y1a, y2a);
+timeSpent = toc;
+
+fprintf('Czas rozwi¹zywania zagadnienia pocz¹tkowego: %f ms\n', timeSpent / 1000);
 
 % Obliczenie wartosci dokladnych
 y1Exact = y1Solution(x);
@@ -59,3 +63,4 @@ errorY2 = abs(y2 - y2Exact);
 fprintf('Maksymalny modu³ b³êdu miêdzy rozwi¹zaniem dok³adnym a obliczonym metod¹:\n');
 fprintf('* dla y1: %e\n', max(errorY1));
 fprintf('* dla y2: %e\n', max(errorY2));
+fprintf('\n\n');
