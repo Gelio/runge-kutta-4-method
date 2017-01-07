@@ -35,6 +35,14 @@ joinPlots = 0;
 % *** Koniec konfiguracji ***
 
 
+% Sprawdzenie, czy zagadnienie poczatkowe oraz dokladne rozwiazanie sie
+% zgadzaja
+delta = 0.1;
+if abs(y1Solution(a) - y1a) > delta || abs(y2Solution(a) - y2a) > delta
+    error('testScript:wrongSolution', ...
+        'Wpisane rozwi¹zanie dok³adne uk³adu równañ nie zgadza siê z zagadnieniem pocz¹tkowym (zbyt du¿a ró¿nica wartoœci w punkcie a)');
+end
+
 % Rozwiazanie ukladu rownan rozniczkowych
 [x, y1, y2] = solveDifferentialSystem(f1, f2, a, b, n, y1a, y2a);
 
