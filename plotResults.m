@@ -1,3 +1,19 @@
+% plotResults(x, y1, y2, y1Exact, y2Exact) - funkcja rysujaca wykresy
+% wartosci z wektorow y1 oraz y2 (wartosci przyblizone), a takze ich
+% wartosci dokladnych (y1Exact, y2Exact) dla argumentow z wektora x.
+% Rysowane sa takze wykresu bledu.
+%
+% Wejscie:
+% * x - wektor argumentow
+% * y1, y2 - wektory z wartosciami przyblizonymi
+% * y1Exact, y2Exact - wektory z wartosciami dokladnymi
+% Wszystkie wektory powinny miec taka sama dlugosc.
+%
+% Wyjscie:
+% brak
+%
+% Autor: Grzegorz Rozdzialik (D4, gr. lab. 2)
+
 function plotResults(x, y1, y2, y1Exact, y2Exact)
 figure;
 plot(x, y1, x, y1Exact);
