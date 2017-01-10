@@ -24,10 +24,10 @@ h = x(2) - x(1);
 % Fortuna, Macukow, Wasowski "Metody Numeryczne"
 a = [0 1/3 2/3 1];
 b = [
-      0   0  0;
-     1/3  0  0;
-    -1/3  1  0;
-      1  -1  1;
+      0   0  0  0;
+     1/3  0  0  0;
+    -1/3  1  0  0;
+      1  -1  1  0;
 ];
 w = [1/8 3/8 3/8 1/8];
 
@@ -38,17 +38,10 @@ K(1, 1) = h * f1(x(n-1), y1(n-1), y2(n-1));
 K(2, 1) = h * f2(x(n-1), y1(n-1), y2(n-1));
 
 for i=2:4
-    % Obliczenie sum wystepujacych we wzorze
-    sum1 = 0;
-    sum2 = 0;
-    for j=1:(i-1)
-        sum1 = sum1 + b(i, j) * K(1, j);
-        sum2 = sum2 + b(i, j) * K(2, j);
-    end
     % Obliczenie argumentow funkcji f1 i f2 wystepujacych we wzorze
     nextX = x(n-1) + a(i)*h;
-    nextY1 = y1(n-1) + sum1;
-    nextY2 = y2(n-1) + sum2;
+    nextY1 = y1(n-1) + dot(b(i, :), K(1, :));
+    nextY2 = y2(n-1) + dot(b(i, :), K(2, :));
     
     % Uzupelnienie kolejnych kolumn macierzy K
     K(1, i) = h * f1(nextX, nextY1, nextY2);
